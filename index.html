@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Todo App</title>
+    <meta charset="UTF-8" />
+    <script defer src="./src/index.js"></script>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+
+  <body>
+    <main class="main-section">
+      <!-- <section class="options-section">
+        <h2 class="title">OPTIONS</h2>
+        <label>
+          Show completed
+          <input type="checkbox" checked />
+        </label>
+      </section> -->
+      <!-- <section class="add-item-section">
+        <h2 class="title">ADD ITEM</h2>
+        <form class="add-item">
+          <input
+            class="text-input"
+            type="text"
+            name="text"
+            required
+            minlength="3"
+          />
+          <button type="submit">Add</button>
+        </form>
+      </section> -->
+      <section class="todos-section">
+        <h2 class="title">TODO</h2>
+        <ul class="todo-list">
+          <li class="todo">
+            <div class="completed-section">
+              <input class="completed-checkbox" type="checkbox" />
+            </div>
+            <div class="text-section">
+              <p class="text">Go shopping</p>
+            </div>
+            <div class="button-section">
+              <button class="delete">Delete</button>
+            </div>
+          </li>
+        </ul>
+      </section>
+      <section class="completed-todos-section">
+        <h2 class="title">COMPLETED</h2>
+        <ul class="completed-list">
+          <li class="todo completed">
+            <div class="completed-section">
+              <input class="completed-checkbox" type="checkbox" />
+            </div>
+            <div class="text-section">
+              <p class="text">See the doctor</p>
+            </div>
+            <div class="button-section">
+              <button class="delete">Delete</button>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>
