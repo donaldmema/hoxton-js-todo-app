@@ -1,11 +1,3 @@
-// Challenges
-// - Add a search bar to look for todos with some specific text
-// - Add tags to the todos
-//     - User can see all existing tags, dynamically generated
-//     - You can filter todos by tags, selecting multiple if needed
-// - Add multiple users:
-//     - You can select which user a todo belongs to
-//     - You can filter the todos by user
 // - Google up localStorage, how can you use it to make it so you don't lose your data when you refresh the app?
 
 // A user can:
@@ -34,11 +26,16 @@ function getIncompletedTodos() {
   return state.todos.filter((todo) => !todo.completed);
 }
 
+function deleteTodo(text) {
+  let newState = state.todos.filter((todo) => todo.text !== text);
+  state.todos = newState;
+}
+
 let state = {
   todos: [
     { text: "Learn React", completed: false },
     { text: "Learn Node", completed: false },
-    { text: "Learn Express", completed: false },
+    { text: "Learn Express", completed: true },
     { text: "Learn MongoDB", completed: false },
   ],
   showCompleted: true,
@@ -121,6 +118,8 @@ function renderTodosSection() {
 }
 
 function renderCompletedTodosSection() {
+  if (!state.showCompleted) return;
+
   let completedTodosSection = document.createElement("section");
   completedTodosSection.className = "completed-todos-section";
 
@@ -131,14 +130,58 @@ function renderCompletedTodosSection() {
   let completedTodosList = document.createElement("ul");
   completedTodosList.className = "completed-list";
 
-  //... Here must go the function to render the completed todos li elements
-
   completedTodosSection.append(completedTodosTitle, completedTodosList);
+
   mainSection.append(completedTodosSection);
+  showCompletedTodos();
 }
 
 function showCompletedTodos() {
-  render();
+  let completedTodos = getCompletedTodos();
+  let completedTodosList = document.querySelector(".completed-list");
+
+  for (let todo of completedTodos) {
+    let todoLi = document.createElement("li");
+    todoLi.className = "todo completed";
+
+    todoLi.addEventListener("click", function () {
+      //maybe the event listener shouldnt be to the whole li, but to the text
+      todo.completed = !todo.completed;
+      render();
+    });
+
+    let checkboxDivEl = document.createElement("div");
+    checkboxDivEl.className = "completed-section";
+
+    let checkboxEl = document.createElement("input");
+    checkboxEl.className = "completed-checkbox";
+    checkboxEl.type = "checkbox";
+    if (todo.completed) checkboxEl.checked = true;
+
+    let textDivEl = document.createElement("div");
+    textDivEl.className = "text-section";
+
+    let textEl = document.createElement("p");
+    textEl.className = "text";
+    textEl.textContent = todo.text;
+
+    let deleteBtnSection = document.createElement("div");
+    deleteBtnSection.className = "button-section";
+
+    let deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete";
+    deleteBtn.textContent = "Delete";
+    deleteBtn.addEventListener("click", function () {
+      deleteTodo(todo.text);
+      render();
+    });
+
+    checkboxDivEl.append(checkboxEl);
+    textDivEl.append(textEl);
+    deleteBtnSection.append(deleteBtn);
+    todoLi.append(checkboxDivEl, textDivEl, deleteBtnSection);
+    completedTodosList.append(todoLi);
+  }
 }
 
 function addTodo(todoText) {
@@ -147,7 +190,7 @@ function addTodo(todoText) {
   if (todoMatch) return;
 
   // @ts-ignore
-  state.todos.push({ todoText, completed: false });
+  state.todos.push({ text: todoText, completed: false });
 }
 
 {
