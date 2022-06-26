@@ -24,6 +24,26 @@
 // - Try starting with state. Create the state for the todos, then a function to toggle a todo's completed state, a function to add a new todo, etc.
 // - You can test these functions before you even render anything on the page, just by calling the functions in your js file.
 
+let mainSection = document.querySelector(".main-section");
+
+function getCompletedTodos() {
+  return state.todos.filter((todo) => todo.completed);
+}
+
+function getIncompletedTodos() {
+  return state.todos.filter((todo) => !todo.completed);
+}
+
+let state = {
+  todos: [
+    { text: "Learn React", completed: false },
+    { text: "Learn Node", completed: false },
+    { text: "Learn Express", completed: false },
+    { text: "Learn MongoDB", completed: false },
+  ],
+  showCompleted: true,
+};
+
 function renderOptionsSection() {
   let optionsSection = document.createElement("section");
   optionsSection.className = "options-section";
@@ -37,11 +57,14 @@ function renderOptionsSection() {
 
   let showCompletedTodosCheckbox = document.createElement("input");
   showCompletedTodosCheckbox.type = "checkbox";
-  showCompletedTodosCheckbox.checked = true;
+  if (state.showCompleted) showCompletedTodosCheckbox.checked = true;
+  showCompletedTodosCheckbox.addEventListener("click", function () {
+    state.showCompleted = !state.showCompleted;
+    render();
+  });
 
   showCompletedTodosLabel.appendChild(showCompletedTodosCheckbox);
   optionsSection.append(optionsTitle, showCompletedTodosLabel);
-  let mainSection = document.querySelector(".main-section");
   mainSection.append(optionsSection);
 }
 
@@ -67,10 +90,16 @@ function renderAddTodoSection() {
   submitBtn.type = "submit";
   submitBtn.textContent = "Add";
 
+  formEl.addEventListener("submit", function (event) {
+    event.preventDefault();
+    addTodo(inputTodo.value);
+    inputTodo.value = "";
+    render();
+  });
+
   formEl.append(inputTodo, submitBtn);
   addTodoSection.append(addTodoTitle, formEl);
 
-  let mainSection = document.querySelector(".main-section");
   mainSection.append(addTodoSection);
 }
 
@@ -88,23 +117,60 @@ function renderTodosSection() {
   //... Here must go the function to render the todos li elements
 
   todosSection.append(todosTitle, todosList);
-  let mainSection = document.querySelector(".main-section");
   mainSection.append(todosSection);
 }
 
-function renderCompletedTodosSection() {}
+function renderCompletedTodosSection() {
+  let completedTodosSection = document.createElement("section");
+  completedTodosSection.className = "completed-todos-section";
 
-function render() {
-  let mainSection = document.createElement("main");
-  mainSection.textContent = "";
-  mainSection.className = "main-section";
+  let completedTodosTitle = document.createElement("h2");
+  completedTodosTitle.className = "title";
+  completedTodosTitle.textContent = "COMPLETED";
 
-  renderOptionsSection();
-  renderAddTodoSection();
+  let completedTodosList = document.createElement("ul");
+  completedTodosList.className = "completed-list";
+
+  //... Here must go the function to render the completed todos li elements
+
+  completedTodosSection.append(completedTodosTitle, completedTodosList);
+  mainSection.append(completedTodosSection);
+}
+
+function showCompletedTodos() {
+  render();
+}
+
+function addTodo(todoText) {
+  let todoMatch = state.todos.some((todo) => todo.text === todoText);
+
+  if (todoMatch) return;
+
+  // @ts-ignore
+  state.todos.push({ todoText, completed: false });
 }
 
 {
   /* 
+
+<section class="completed-todos-section">
+<h2 class="title">COMPLETED</h2>
+<ul class="completed-list">
+  <li class="todo completed">
+    <div class="completed-section">
+      <input class="completed-checkbox" type="checkbox" />
+    </div>
+    <div class="text-section">
+      <p class="text">See the doctor</p>
+    </div>
+    <div class="button-section">
+      <button class="delete">Delete</button>
+    </div>
+  </li>
+</ul>
+</section>
+
+
 
 <section class="todos-section">
 <h2 class="title">TODO</h2>
@@ -122,24 +188,15 @@ function render() {
   </li>
 </ul>
 </section>
+ */
+}
 
+function render() {
+  mainSection.textContent = "";
+  mainSection.className = "main-section";
 
-
-
-<section class="completed-todos-section">
-<h2 class="title">COMPLETED</h2>
-<ul class="completed-list">
-  <li class="todo completed">
-    <div class="completed-section">
-      <input class="completed-checkbox" type="checkbox" />
-    </div>
-    <div class="text-section">
-      <p class="text">See the doctor</p>
-    </div>
-    <div class="button-section">
-      <button class="delete">Delete</button>
-    </div>
-  </li>
-</ul>
-</section> */
+  renderOptionsSection();
+  renderAddTodoSection();
+  renderTodosSection();
+  renderCompletedTodosSection();
 }
