@@ -66,11 +66,11 @@ ul {
   text-decoration: line-through;
 }
 
-.todo .button-section {
+/* .todo .button-section {
   display: grid;
   grid-template-rows: 1fr 1fr;
   grid-gap: 3px;
-}
+} */
 
 .todo .completed-section,
 .todo .button-section {
